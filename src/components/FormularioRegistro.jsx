@@ -1,13 +1,12 @@
-
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class FormularioRegistro extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nombre: '',
-      apellido: '',
-      curso: 'ingles', // Valor predeterminado: inglés
+      nombre: "",
+      apellido: "",
+      curso: "ingles", // Valor predeterminado: inglés
       meses: 1, // Valor predeterminado: 1 mes
       costoTotal: 25, // Costo por mes
       registros: [], // Estado para almacenar los registros
@@ -27,29 +26,48 @@ class FormularioRegistro extends Component {
   // Función para calcular el costo total con descuento del 10%/20%/27%/37%/53%
   calcularCostoTotal = (meses) => {
     const costoPorMes = 25;
+    let costoTotalDesc = costoPorMes * meses;
 
-    let costoTotal = costoPorMes * meses;
-
- 
-    if (meses >= 2 && meses<=3) {
-      costoTotal *= 0.9 ; // Aplicar descuento
-      let descuento=10;
-
-    }else if(meses>=4 && meses<=5){
-        costoTotal*=0.8;
-    }else if(meses>=6 && meses<=7){
-        costoTotal*=0.73;
-    }else if(meses>=8 && meses<=9){
-        costoTotal*=0.63;
-    }else if(meses>=10){
-        costoTotal*=0.47;
-
+    if (meses >= 2 && meses <= 3) {
+      costoTotalDesc *= 0.9; // Aplicar descuento
+    } else if (meses >= 4 && meses <= 5) {
+      costoTotalDesc *= 0.8;
+    } else if (meses >= 6 && meses <= 7) {
+      costoTotalDesc *= 0.73;
+    } else if (meses >= 8 && meses <= 9) {
+      costoTotalDesc *= 0.63;
+    } else if (meses >= 10) {
+      costoTotalDesc *= 0.47;
     }
 
+    return costoTotalDesc;
+  };
+
+  CalcularSinDescuento = (meses) => {
+    const costoPorMes = 25;
+    let costoTotal = costoPorMes * meses;
     return costoTotal;
   };
 
+  DescuentoCalculado = (meses) => {
+    const costoPorMes = 25;
+    let DescuentoC = costoPorMes * meses;
 
+    if (meses >= 2 && meses <= 3) {
+        DescuentoC *= 0.1; // Aplicar descuento
+      } else if (meses >= 4 && meses <= 5) {
+        DescuentoC *= 0.2;
+      } else if (meses >= 6 && meses <= 7) {
+        DescuentoC *= 0.27;
+      } else if (meses >= 8 && meses <= 9) {
+        DescuentoC *= 0.37;
+      } else if (meses >= 10) {
+        DescuentoC *= 0.53;
+      }
+
+return DescuentoC;
+
+  };
   handleSubmit = (event) => {
     event.preventDefault();
     // Crear un nuevo registro con los datos del formulario
@@ -58,15 +76,17 @@ class FormularioRegistro extends Component {
       apellido: this.state.apellido,
       curso: this.state.curso,
       meses: this.state.meses,
-      costoTotal: this.calcularCostoTotal(this.state.meses), // Calcular costo con descuento
+      costoTotalDesc: this.calcularCostoTotal(this.state.meses), // Calcular costo con descuento
+      DescuentoC:this.DescuentoCalculado(this.state.meses),
+      costoTotal: this.CalcularSinDescuento(this.state.meses),
     };
 
     // Agregar el nuevo registro al array de registros en el estado
     this.setState((prevState) => ({
       registros: [...prevState.registros, nuevoRegistro],
-      nombre: '',
-      apellido: '',
-      curso: 'ingles',
+      nombre: "",
+      apellido: "",
+      curso: "ingles",
       meses: 1,
     }));
   };
@@ -137,7 +157,9 @@ class FormularioRegistro extends Component {
               <th>Apellido</th>
               <th>Curso</th>
               <th>Meses</th>
-              <th>Costo Total</th>
+              <th>Total sin descuento</th>
+              <th>Total a pagar por el cliente</th>
+              <th>Descuento calculado</th>
             </tr>
           </thead>
           <tbody>
@@ -148,6 +170,8 @@ class FormularioRegistro extends Component {
                 <td>{registro.curso}</td>
                 <td>{registro.meses}</td>
                 <td>${registro.costoTotal.toFixed(2)}</td>
+                <td>${registro.costoTotalDesc.toFixed(2)}</td>
+                <td>${registro.DescuentoC.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
